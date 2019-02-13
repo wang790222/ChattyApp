@@ -17,43 +17,44 @@ class App extends Component {
   }
 
   handleUserName = (name) => {
-    if (name !== this.state.currentUser.name) {
-      this.setState({
-        currentUser: {
-          name: name,
-        }
-      });
-
-      this.socket.send(JSON.stringify({
-        type: "incomingNotification",
-        content: `${this.state.currentUser.name} changed their name to ${name}`
-      }));
-    }
+    this.setUserName(name);
+    this.sendUserNameMsg(this.state.currentUser.name, name);
   }
 
   handleMsg = (msg) => {
+    this.sendMsgMsg(msg);
+  }
+
+  handleUserNameAndMsg = (name, msg) => {
+    this.sendUserNameMsg(this.state.currentUser.name, name);
+    this.setUserName(name, msg);
+  }
+
+  setUserName = (name, msg) => {
+    this.setState({
+      currentUser: {
+        name: name,
+      }
+    }, () => {
+      if (msg) {
+        this.sendMsgMsg(msg);
+      }
+    });
+  }
+
+  sendUserNameMsg = (currentName, newName) => {
+    this.socket.send(JSON.stringify({
+      type: "incomingNotification",
+      content: `${currentName} changed their name to ${newName}`
+    }));
+  }
+
+  sendMsgMsg = (msg) => {
     this.socket.send(JSON.stringify({
       type: "incomingMessage",
       content: msg,
       username: this.state.currentUser.name
     }));
-  }
-
-  newAndConcatMsg = (type, content, name) => {
-    return this.state.messages.concat((type === "incomingNotification") ?
-      (
-        {
-          type: "incomingNotification",
-          content: `${this.state.currentUser.name} changed their name to ${name}`
-        }
-      ) :
-      (
-        {
-          type: "incomingMessage",
-          content: content,
-          username: this.state.currentUser.name
-        }
-    ));
   }
 
   handleReceivedMsg = (event) => {
@@ -71,7 +72,10 @@ class App extends Component {
 
   render() {
 
-    const chatBar = <ChatBar key="chatbar" username={this.state.currentUser.name} handleUserName={this.handleUserName} handleMsg={this.handleMsg} />;
+    const chatBar = <ChatBar key="chatbar" username={this.state.currentUser.name}
+                             handleUserName={this.handleUserName}
+                             handleMsg={this.handleMsg}
+                             handleUserNameAndMsg={this.handleUserNameAndMsg} />;
     const messageList = <MessageList messages={this.state.messages} />;
 
     return (
