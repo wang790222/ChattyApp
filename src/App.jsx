@@ -18,23 +18,24 @@ class App extends Component {
 
   handleUserName = (name) => {
     if (name !== this.state.currentUser.name) {
-      this.setState(
-      {
+      this.setState({
         currentUser: {
           name: name,
-        },
-
-        messages: this.newAndConcatMsg("incomingNotification", "", name)
+        }
       });
+
+      this.socket.send(JSON.stringify({
+        type: "incomingNotification",
+        content: `${this.state.currentUser.name} changed their name to ${name}`
+      }));
     }
   }
 
   handleMsg = (msg) => {
-
-    this.setState({messages: this.newAndConcatMsg("incomingMessage", msg, "")});
     this.socket.send(JSON.stringify({
-      username: this.state.currentUser.name,
-      message: msg
+      type: "incomingMessage",
+      content: msg,
+      username: this.state.currentUser.name
     }));
   }
 
@@ -53,6 +54,19 @@ class App extends Component {
           username: this.state.currentUser.name
         }
     ));
+  }
+
+  handleReceivedMsg = (event) => {
+    if (event.data) {
+      try {
+        const newMsg = JSON.parse(event.data);
+        if (newMsg.type === "incomingNotification" || newMsg.type === "incomingMessage") {
+          this.setState({messages: this.state.messages.concat(newMsg)});
+        }
+      } catch (e) {
+          console.log("Received Message Is Not Json.");
+      }
+    }
   }
 
   render() {
@@ -75,9 +89,7 @@ class App extends Component {
     socket.addEventListener('open', function (event) {
     });
 
-    socket.addEventListener('message', function (event) {
-      console.log("Data from server", event.data);
-    });
+    socket.addEventListener('message', this.handleReceivedMsg);
   }
 }
 export default App;
