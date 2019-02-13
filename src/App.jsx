@@ -12,7 +12,8 @@ class App extends Component {
       currentUser: {
         name: "Anonymous"
       },
-      messages: []
+      messages: [],
+      onlineUsers: null
     };
   }
 
@@ -45,7 +46,7 @@ class App extends Component {
   sendUserNameMsg = (currentName, newName) => {
     this.socket.send(JSON.stringify({
       type: "incomingNotification",
-      content: `${currentName} changed their name to ${newName}`
+      content: `**${currentName}** changed their name to **${newName}**`
     }));
   }
 
@@ -63,16 +64,24 @@ class App extends Component {
         const newMsg = JSON.parse(event.data);
         if (newMsg.type === "incomingNotification" || newMsg.type === "incomingMessage") {
           this.setState({messages: this.state.messages.concat(newMsg)});
+        } else {
+          if (newMsg.usersNum) {
+            this.setState({onlineUsers: newMsg.usersNum});
+          }
         }
       } catch (e) {
-          console.log("Received Message Is Not Json.");
+        console.log("Received Message Is Not Json.");
       }
     }
   }
 
   render() {
-
-    const chatBar = <ChatBar key="chatbar" username={this.state.currentUser.name}
+    const sOrNot      = this.state.onlineUsers > 1 ? "Users" : "User";
+    const navbar      = <nav className="navbar">
+                          <a href="/" className="navbar-brand">Chatty</a>
+                          <p className="navbarText">{this.state.onlineUsers} {sOrNot} Online</p>
+                        </nav>;
+    const chatBar     = <ChatBar key="chatbar" username={this.state.currentUser.name}
                              handleUserName={this.handleUserName}
                              handleMsg={this.handleMsg}
                              handleUserNameAndMsg={this.handleUserNameAndMsg} />;
@@ -80,6 +89,7 @@ class App extends Component {
 
     return (
       <div>
+        {navbar}
         {messageList}
         {chatBar}
       </div>
