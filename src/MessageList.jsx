@@ -9,19 +9,22 @@ export default class MessageList extends React.Component {
     super(props);
   }
 
-  messageUserName(name) {
-    //<span className="message-username">Anonymous1</span>
-    return (<span className="message-username">{name}</span>);
+  messageUserName(name, style) {
+    return (<span className="message-username" style={style}>{name}</span>);
   }
 
   messageContent(content) {
-    //<span className="message-content">I won't be impressed with technology until I can download food.</span>
     return (<span className="message-content">{content}</span>);
   }
 
   render() {
 
     const messageList = this.props.messages.map(message => {
+
+      const style = {
+        color: message.color
+      };
+
       return (message.type === "incomingNotification") ?
       (
         <messageSystem className="message system" key={generateRandomId()}>
@@ -30,7 +33,7 @@ export default class MessageList extends React.Component {
       ) :
       (
         <message className="message" key={generateRandomId()}>
-          {this.messageUserName(message.username)}
+          {this.messageUserName(message.username, style)}
           {this.messageContent(message.content)}
         </message>
       );

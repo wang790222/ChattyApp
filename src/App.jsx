@@ -8,9 +8,13 @@ class App extends Component {
 
   constructor(props) {
     super(props);
+
+    const colorOptions = ["#FF0000", "#808080", "#008000", "#1E90FF"];
+
     this.state = {
       currentUser: {
-        name: "Anonymous"
+        name: "Anonymous",
+        color: colorOptions[Math.floor(Math.random() * 4)]
       },
       messages: [],
       onlineUsers: null
@@ -54,7 +58,8 @@ class App extends Component {
     this.socket.send(JSON.stringify({
       type: "incomingMessage",
       content: msg,
-      username: this.state.currentUser.name
+      username: this.state.currentUser.name,
+      color: this.state.currentUser.color
     }));
   }
 
