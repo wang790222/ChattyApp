@@ -14,7 +14,9 @@ export default class MessageList extends React.Component {
   }
 
   messageContent(content) {
-    return (<span className="message-content">{content}</span>);
+    return (/.\.(jpg|png|gif)/.test(content)) ?
+      (<span className="message-content"><img src={content} /></span>) :
+      (<span className="message-content">{content}</span>);
   }
 
   render() {
@@ -37,7 +39,6 @@ export default class MessageList extends React.Component {
           {this.messageContent(message.content)}
         </message>
       );
-
     });
 
     return (
