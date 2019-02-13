@@ -9,12 +9,10 @@ class App extends Component {
   constructor(props) {
     super(props);
 
-    const colorOptions = ["#FF0000", "#808080", "#008000", "#1E90FF"];
-
     this.state = {
       currentUser: {
         name: "Anonymous",
-        color: colorOptions[Math.floor(Math.random() * 4)]
+        color: null
       },
       messages: [],
       onlineUsers: null
@@ -36,11 +34,12 @@ class App extends Component {
   }
 
   setUserName = (name, msg) => {
-    this.setState({
+    this.setState(prevState => ({
       currentUser: {
-        name: name,
+        ...prevState.currentUser,
+        name: name
       }
-    }, () => {
+    }), () => {
       if (msg) {
         this.sendMsgMsg(msg);
       }
@@ -69,9 +68,16 @@ class App extends Component {
         const newMsg = JSON.parse(event.data);
         if (newMsg.type === "incomingNotification" || newMsg.type === "incomingMessage") {
           this.setState({messages: this.state.messages.concat(newMsg)});
-        } else {
-          if (newMsg.usersNum) {
-            this.setState({onlineUsers: newMsg.usersNum});
+        } else if (newMsg.usersNum) {
+          this.setState({onlineUsers: newMsg.usersNum});
+        } else if (newMsg.color) {
+          if (!this.state.currentUser.color) {
+            this.setState(prevState => ({
+              currentUser: {
+                ...prevState.currentUser,
+                color: newMsg.color
+              }
+            }));
           }
         }
       } catch (e) {
