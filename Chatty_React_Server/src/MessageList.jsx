@@ -1,6 +1,5 @@
 import React from 'react';
 import App from './App.jsx';
-import Message from './Message.jsx'
 import { generateRandomId } from "./utils";
 
 export default class MessageList extends React.Component {
@@ -14,9 +13,7 @@ export default class MessageList extends React.Component {
   }
 
   messageContent(content) {
-    return (/.\.(jpg|png|gif)/.test(content)) ?
-      (<span className="message-content"><img src={content} /></span>) :
-      (<span className="message-content">{content}</span>);
+    return (<span className="message-content" dangerouslySetInnerHTML={{ __html: content }} />);
   }
 
   render() {

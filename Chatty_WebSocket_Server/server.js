@@ -24,8 +24,14 @@ wss.on('connection', (ws) => {
   setColorOfUserName(ws);
 
   ws.on("message", function msgComing(msg) {
+
     const msgJsonObj = JSON.parse(msg);
     msgJsonObj.id = uuidv1();
+
+    if (/.\.(jpg|png|gif)/.test(msgJsonObj.content)) {
+      msgJsonObj.content = `<img src=\"${msgJsonObj.content}\" />`;
+    }
+
     wss.broadcast(msgJsonObj);
   });
 
