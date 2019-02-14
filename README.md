@@ -15,10 +15,18 @@ Chatty will allow users to communicate with each other without having to registe
 ## Dependencies
 
 * React
+* React-dom
 * Webpack
 * [babel-loader](https://github.com/babel/babel-loader)
 * [webpack-dev-server](https://github.com/webpack/webpack-dev-server)
-* ws
+* babel-core
+* babel-preset-es2015
+* babel-preset-react
+* css-loader
+* node-sass
+* sass-loader
+* sockjs-client
+* style-loader
 
 ## Screenshot
 !["Screenshot of Chatty"](https://github.com/wang790222/ChattyApp/blob/master/doc/chatty.gif?raw=true)
