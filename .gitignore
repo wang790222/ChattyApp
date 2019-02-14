@@ -3,6 +3,7 @@ npm-debug.log
 .DS_Store
 dist
 .eslintrc.js
+.gitignore
 
 ### PhpStorm ###
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio and Webstorm
