@@ -1,4 +1,5 @@
 import React from 'react';
+import Swal from 'sweetalert2'
 
 export default class ChatBar extends React.Component {
 
@@ -13,22 +14,35 @@ export default class ChatBar extends React.Component {
 
   sendUserName = evt => {
     if (evt.key === "Enter") {
-      if (this.tempUserName !== this.props.username) {
-        this.props.handleUserName(this.tempUserName);
+      if (this.validateUserName(this.tempUserName)) {
+        if (this.tempUserName !== this.props.username) {
+          this.props.handleUserName(this.tempUserName);
+        }
       }
     }
   };
 
   sendMessage = evt => {
     if (evt.key === "Enter") {
-      if (this.tempUserName !== this.props.username) {
-        this.props.handleUserNameAndMsg(this.tempUserName, evt.target.value);
-      } else {
-        this.props.handleMsg(evt.target.value);
+      if (this.validateUserName(this.tempUserName)) {
+        if (this.tempUserName !== this.props.username) {
+          this.props.handleUserNameAndMsg(this.tempUserName,evt.target.value);
+        } else {
+          this.props.handleMsg(evt.target.value);
+        }
+        evt.target.value = "";
       }
-      evt.target.value = "";
     }
   };
+
+  validateUserName = (name) => {
+    if (name.trim().length === 0) {
+      Swal.fire("You Should Have A Name.");
+      return false;
+    }
+
+    return true;
+  }
 
   render() {
     return (
