@@ -1,11 +1,11 @@
 import React from 'react';
-import Swal from 'sweetalert2'
 
 export default class ChatBar extends React.Component {
 
   constructor(props) {
     super(props);
     this.tempUserName = this.props.username;
+    this.showDefultValue = (this.tempUserName === "Anonymous") ? null : this.tempUserName;
   }
 
   changeUserName = evt => {
@@ -14,41 +14,50 @@ export default class ChatBar extends React.Component {
 
   sendUserName = evt => {
     if (evt.key === "Enter") {
-      if (this.validateUserName(this.tempUserName)) {
-        if (this.tempUserName !== this.props.username) {
-          this.props.handleUserName(this.tempUserName);
-        }
+      this.tempUserName = this.validateUserName(evt, this.tempUserName);
+      if (this.tempUserName !== this.props.username) {
+        this.props.handleUserName(this.tempUserName);
       }
     }
   };
 
   sendMessage = evt => {
     if (evt.key === "Enter") {
-      if (this.validateUserName(this.tempUserName)) {
-        if (this.tempUserName !== this.props.username) {
-          this.props.handleUserNameAndMsg(this.tempUserName,evt.target.value);
-        } else {
-          this.props.handleMsg(evt.target.value);
-        }
-        evt.target.value = "";
+      this.tempUserName = this.validateUserName(evt, this.tempUserName);
+      if (this.tempUserName !== this.props.username) {
+        this.props.handleUserNameAndMsg(this.tempUserName,evt.target.value);
+      } else {
+        this.props.handleMsg(evt.target.value);
       }
+      evt.target.value = "";
     }
   };
 
-  validateUserName = (name) => {
-    if (name.trim().length === 0) {
-      Swal.fire("You Should Have A Name.");
-      return false;
+  validateUserName = (evt, name) => {
+    if (name) {
+      if ((name.trim().length === 0)) {
+        evt.target.value = "";
+        return "Anonymous";
+      } else {
+        return name;
+      }
+    } else {
+      return "Anonymous";
     }
+  }
 
-    return true;
+  avoidUserNameBlank = (evt) => {
+    if ((this.tempUserName.trim().length === 0)) {
+      evt.target.value = "";
+    }
   }
 
   render() {
     return (
-      <footer className="chatbar">
-        <input className="chatbar-username" name="username" defaultValue={this.props.username}
-               onChange={this.changeUserName} onKeyPress={this.sendUserName} />
+      <footer className="chatbar" key={this.showDefultValue}>
+        <input className="chatbar-username" name="username" defaultValue={this.showDefultValue}
+               placeholder="Your Name (Optional)" onChange={this.changeUserName}
+               onKeyPress={this.sendUserName} onBlur={this.avoidUserNameBlank} />
         <input className="chatbar-message" name="msg" placeholder="Type a message and hit ENTER"
                onKeyPress={this.sendMessage} />
       </footer>
