@@ -47,6 +47,7 @@ export default class ChatBar extends React.Component {
       }
       evt.target.value = "";
       this.setState({
+        shorEmojiPicker: false,
         tempMsg: ""
       });
     }

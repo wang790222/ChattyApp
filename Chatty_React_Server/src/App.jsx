@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import ChatBar from './ChatBar.jsx';
 import MessageList from './MessageList.jsx';
+import { generateRandomId } from "./utils";
 
 class App extends Component {
 
@@ -9,6 +10,7 @@ class App extends Component {
 
     this.state = {
       currentUser: {
+        userId: generateRandomId(),
         name: "Anonymous",
         color: null
       },
@@ -56,6 +58,7 @@ class App extends Component {
       type: "incomingMessage",
       content: msg,
       username: this.state.currentUser.name,
+      userId: this.state.currentUser.userId,
       color: this.state.currentUser.color
     }));
   }
@@ -94,7 +97,7 @@ class App extends Component {
                              handleUserName={this.handleUserName}
                              handleMsg={this.handleMsg}
                              handleUserNameAndMsg={this.handleUserNameAndMsg} />;
-    const messageList = <MessageList messages={this.state.messages} />;
+    const messageList = <MessageList messages={this.state.messages} thisUserId={this.state.currentUser.userId}/>;
 
     return (
       <div>

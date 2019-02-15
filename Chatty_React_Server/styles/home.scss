@@ -49,6 +49,10 @@ body {
   padding: 5px 20px;
 }
 
+.message.mine {
+  justify-content: flex-end;
+}
+
 .message-content,
 .message-username {
   overflow: hidden;

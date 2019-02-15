@@ -36,10 +36,18 @@ export default class MessageList extends React.Component {
         </messageSystem>
       ) :
       (
-        <message className="message" key={generateRandomId()}>
-          {this.messageUserName(message.username, style)}
-          {this.messageContent(message.content)}
-        </message>
+        (this.props.thisUserId === message.userId) ?
+          (<message className="message mine" key={generateRandomId()}>
+            <div>
+              <span className="message-username" style={style}>{message.username}</span>
+              <span className="message-content" onClick={this.replyMessage}
+                  dangerouslySetInnerHTML={{ __html: message.content }} />
+            </div>
+           </message>) :
+          (<message className="message" key={generateRandomId()}>
+            {this.messageUserName(message.username, style)}
+            {this.messageContent(message.content)}
+           </message>)
       );
     });
 
