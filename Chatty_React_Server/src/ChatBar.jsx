@@ -31,6 +31,12 @@ export default class ChatBar extends React.Component {
     }
   };
 
+  changeMessage = evt => {
+    this.setState({
+      tempMsg: evt.target.value
+    });
+  };
+
   sendMessage = evt => {
     if (evt.key === "Enter") {
       this.state.tempUserName = this.validateUserName(evt, this.state.tempUserName);
@@ -42,10 +48,6 @@ export default class ChatBar extends React.Component {
       evt.target.value = "";
       this.setState({
         tempMsg: ""
-      });
-    } else {
-      this.setState({
-        tempMsg: this.state.tempMsg + evt.key
       });
     }
   };
@@ -93,7 +95,8 @@ export default class ChatBar extends React.Component {
                  placeholder="Your Name (Optional)" onChange={this.changeUserName}
                  onKeyPress={this.sendUserName} onBlur={this.avoidUserNameBlank} />
           <input className="chatbar-message" name="msg" placeholder="Type a message and hit ENTER"
-                 onKeyPress={this.sendMessage} value={this.state.tempMsg} />
+                 onChange={this.changeMessage} value={this.state.tempMsg}
+                 onKeyPress={this.sendMessage} />
           <span id="emoij-triger" onClick={this.toggleEmojiPicker}>😀</span>
         </footer>
       </div>
