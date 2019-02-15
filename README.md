@@ -27,6 +27,8 @@ Chatty will allow users to communicate with each other without having to registe
 * sass-loader
 * sockjs-client
 * style-loader
+* [emoji-picker-react](https://www.npmjs.com/package/emoji-picker-react)
+* [emoji-js](https://www.npmjs.com/package/emoji-js)
 
 ## Screenshot
 !["Screenshot of Chatty"](https://github.com/wang790222/ChattyApp/blob/master/doc/chatty.gif?raw=true)
