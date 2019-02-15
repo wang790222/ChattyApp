@@ -8,12 +8,17 @@ export default class MessageList extends React.Component {
     super(props);
   }
 
+  replyMessage = () => {
+    console.log(this.props);
+  }
+
   messageUserName(name, style) {
     return (<span className="message-username" style={style}>{name}</span>);
   }
 
   messageContent(content) {
-    return (<span className="message-content" dangerouslySetInnerHTML={{ __html: content }} />);
+    return (<span className="message-content" onClick={this.replyMessage}
+                  dangerouslySetInnerHTML={{ __html: content }} />);
   }
 
   render() {

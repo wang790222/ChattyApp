@@ -45,6 +45,8 @@
     "webpack-dev-server": "2.3.0"
   },
   "dependencies": {
+    "emoji-js": "^3.4.1",
+    "emoji-picker-react": "^2.1.1",
     "react": "15.4.2",
     "react-dom": "15.4.2"
   }

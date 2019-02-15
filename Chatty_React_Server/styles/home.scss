@@ -54,6 +54,7 @@ body {
   overflow: hidden;
   margin: 5px;
   padding: 0 10px;
+  cursor: pointer;
 }
 
 .message-content {
@@ -99,4 +100,17 @@ body {
 
 img {
   max-width: 60%;
+}
+
+.emoji-picker {
+  position: absolute;
+  bottom: 68px;
+  right: 5px;
+}
+
+#emoij-triger {
+  margin: auto;
+  cursor: pointer;
+  font-size: 36px;
+  line-height:52px;
 }

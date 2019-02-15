@@ -1,35 +1,52 @@
 import React from 'react';
+import MyEmojiPicker from './MyEmojiPicker.jsx';
+import JSEMOJI from 'emoji-js';
+
+let jsemoji = new JSEMOJI();
 
 export default class ChatBar extends React.Component {
 
   constructor(props) {
     super(props);
-    this.tempUserName = this.props.username;
-    this.showDefultValue = (this.tempUserName === "Anonymous") ? null : this.tempUserName;
+    this.state = {
+      tempUserName: this.props.username,
+      showDefultValue: (this.tempUserName === "Anonymous") ? null : this.tempUserName,
+      shorEmojiPicker: false,
+      tempMsg: ""
+    };
   }
 
   changeUserName = evt => {
-    this.tempUserName = evt.target.value;
+    this.setState({
+      tempUserName: evt.target.value
+    });
   };
 
   sendUserName = evt => {
     if (evt.key === "Enter") {
-      this.tempUserName = this.validateUserName(evt, this.tempUserName);
-      if (this.tempUserName !== this.props.username) {
-        this.props.handleUserName(this.tempUserName);
+      this.state.tempUserName = this.validateUserName(evt, this.state.tempUserName);
+      if (this.state.tempUserName !== this.props.username) {
+        this.props.handleUserName(this.state.tempUserName);
       }
     }
   };
 
   sendMessage = evt => {
     if (evt.key === "Enter") {
-      this.tempUserName = this.validateUserName(evt, this.tempUserName);
-      if (this.tempUserName !== this.props.username) {
-        this.props.handleUserNameAndMsg(this.tempUserName,evt.target.value);
+      this.state.tempUserName = this.validateUserName(evt, this.state.tempUserName);
+      if (this.state.tempUserName !== this.props.username) {
+        this.props.handleUserNameAndMsg(this.state.tempUserName, this.state.tempMsg);
       } else {
-        this.props.handleMsg(evt.target.value);
+        this.props.handleMsg(this.state.tempMsg);
       }
       evt.target.value = "";
+      this.setState({
+        tempMsg: ""
+      });
+    } else {
+      this.setState({
+        tempMsg: this.state.tempMsg + evt.key
+      });
     }
   };
 
@@ -47,20 +64,39 @@ export default class ChatBar extends React.Component {
   }
 
   avoidUserNameBlank = (evt) => {
-    if ((this.tempUserName.trim().length === 0)) {
+    if ((this.state.tempUserName.trim().length === 0)) {
       evt.target.value = "";
     }
   }
 
+  toggleEmojiPicker = (evt) => {
+    this.setState({
+      shorEmojiPicker: !this.state.shorEmojiPicker
+    });
+  }
+
+  handleEmoji = (code, emoji) => {
+    this.setState({
+      tempMsg: this.state.tempMsg + jsemoji.replace_colons(`:${emoji.name}:`)
+    });
+  }
+
   render() {
+
+    const emojPic = (this.state.shorEmojiPicker) ? (<MyEmojiPicker className="emoji-picker" handleEmoji={this.handleEmoji}/>) : null;
+
     return (
-      <footer className="chatbar" key={this.showDefultValue}>
-        <input className="chatbar-username" name="username" defaultValue={this.showDefultValue}
-               placeholder="Your Name (Optional)" onChange={this.changeUserName}
-               onKeyPress={this.sendUserName} onBlur={this.avoidUserNameBlank} />
-        <input className="chatbar-message" name="msg" placeholder="Type a message and hit ENTER"
-               onKeyPress={this.sendMessage} />
-      </footer>
+      <div>
+        {emojPic}
+        <footer className="chatbar" key={this.showDefultValue}>
+          <input className="chatbar-username" name="username" defaultValue={this.showDefultValue}
+                 placeholder="Your Name (Optional)" onChange={this.changeUserName}
+                 onKeyPress={this.sendUserName} onBlur={this.avoidUserNameBlank} />
+          <input className="chatbar-message" name="msg" placeholder="Type a message and hit ENTER"
+                 onKeyPress={this.sendMessage} value={this.state.tempMsg} />
+          <span id="emoij-triger" onClick={this.toggleEmojiPicker}>😀</span>
+        </footer>
+      </div>
     );
   }
 }
